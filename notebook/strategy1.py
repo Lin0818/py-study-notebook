@@ -33,7 +33,7 @@ class Order: #the Context
     
     def __repr__(self):
         fmt = '<Order total: {:.2f} due: {:.2f}>'
-        return fmt.format(self.total, self.due())
+        return fmt.format(self.total(), self.due())
     
 def fidelity_promo(order):
     """5% discount for customers with 1000 or more fidelity points"""
@@ -54,6 +54,12 @@ def large_order_promo(order):
         return order.total() * .07
     return 0
 
+promos = [fidelity_promo, bulk_item_promo, large_order_promo]
+
+def best_promo(order):
+    """best promo"""
+    return max(promo(order) for promo in promos)
+
 if __name__ == '__main__':
     joe = Customer('John Doe', 0)
     ann = Customer('Ann Smith', 1100)
@@ -61,5 +67,13 @@ if __name__ == '__main__':
     cart = [LineItem('banana', 4, .5),
            LineItem('apple', 10, 1.5),
            LineItem('watermellon', 5, 5.0)]
+    long_order = [LineItem(str(item_code), 1, 1.0) for item_code in range(10)]
 
-    Order(joe, cart, fidelity_promo)
+    print(Order(joe, cart, fidelity_promo))
+    print(Order(ann, cart, fidelity_promo))
+
+    banana_cart = [LineItem('banana', 30, .5),
+                  LineItem('apple', 10, 1.5)]
+    print(Order(joe, banana_cart, bulk_item_promo))
+
+    print(Order(joe, long_order, best_promo))
