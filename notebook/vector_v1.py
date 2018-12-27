@@ -8,13 +8,18 @@ class Vector:
     typecode = 'd'
     
     def __init__(self, components):
-        self._components = array(self.typecode, components)
+        self.__components = array(self.typecode, components)
+        self._score = 3
+
+    @property
+    def score(self):
+        return self._score
         
     def __iter__(self):
-        return iter(self._components)
+        return iter(self.__components)
     
     def __repr__(self):
-        components = reprlib.repr(self._components)
+        components = reprlib.repr(self.__components)
         components = components[components.find('['):-1]
         return 'Vector({})'.format(components)
     
@@ -23,7 +28,7 @@ class Vector:
     
     def __bytes(self):
         return (bytes([ord(self.typecode)]) + 
-               bytes(self._components))
+               bytes(self.__components))
     
     def __eq__(self, other):
         return tuple(self) == tuple(other)
